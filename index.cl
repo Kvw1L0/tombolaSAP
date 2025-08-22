@@ -169,3 +169,64 @@
             <div class="numeros-container">
                 <p>Historial de Números</p>
                 <div id="lista-numeros" class="grid-numeros">
+                    </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const numeroSorteadoDisplay = document.getElementById('numero-sorteado');
+            const sortearBtn = document.getElementById('sortear-btn');
+            const listaNumerosContainer = document.getElementById('lista-numeros');
+
+            // Inicializar los números disponibles del 1 al 20
+            let numerosDisponibles = Array.from({ length: 20 }, (_, i) => i + 1);
+            
+            // Función para generar los elementos de los números en el HTML
+            const generarListaNumeros = () => {
+                for (let i = 1; i <= 20; i++) {
+                    const numeroItem = document.createElement('div');
+                    numeroItem.classList.add('numero-item');
+                    numeroItem.textContent = i;
+                    numeroItem.setAttribute('data-numero', i);
+                    listaNumerosContainer.appendChild(numeroItem);
+                }
+            };
+
+            // Función principal para sortear un número
+            const sortearNumero = () => {
+                // Verificar si aún quedan números para sortear
+                if (numerosDisponibles.length === 0) {
+                    alert('¡Todos los números han sido sorteados!');
+                    sortearBtn.disabled = true;
+                    return;
+                }
+
+                // Seleccionar un índice aleatorio
+                const indiceAleatorio = Math.floor(Math.random() * numerosDisponibles.length);
+                // Obtener el número sorteado
+                const numeroSorteado = numerosDisponibles[indiceAleatorio];
+
+                // Mostrar el número en la pantalla
+                numeroSorteadoDisplay.textContent = numeroSorteado < 10 ? `0${numeroSorteado}` : numeroSorteado;
+
+                // Marcar el número como sorteado en la lista
+                const numeroElemento = document.querySelector(`.numero-item[data-numero="${numeroSorteado}"]`);
+                if (numeroElemento) {
+                    numeroElemento.classList.add('sorteado');
+                }
+
+                // Eliminar el número sorteado de la lista de disponibles
+                numerosDisponibles.splice(indiceAleatorio, 1);
+            };
+
+            // Generar la lista de números al cargar la página
+            generarListaNumeros();
+
+            // Asignar el evento al botón
+            sortearBtn.addEventListener('click', sortearNumero);
+        });
+    </script>
+</body>
+</html>
