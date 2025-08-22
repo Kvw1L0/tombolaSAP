@@ -1,204 +1,221 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tómbola 1–20</title>
-  <style>
-    /* ====== Estilos básicos y robustos ====== */
-    :root{
-      --bg:#0e1220; 
-      --card:#171b2e; 
-      --ink:#eef1ff; 
-      --muted:#8b90a8;
-      --accent:#7ea8ff;
-      --chipOff:#141a33;
-      --chipOn1:#aaffbf; 
-      --chipOn2:#66ffa6;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; display:grid; place-items:center; min-height:100vh;
-      background:#0b0f1e;
-      color:var(--ink); font-family:system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-    }
-    .wrap{ width:min(720px,94vw); padding:20px; }
+    <meta charset="UTF-8">
+    <title>Tómbola 1-20</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
 
-    .card{
-      background:#151a2c; border:1px solid #2c3561; border-radius:18px; 
-      padding:20px; box-shadow:0 10px 30px rgba(0,0,0,.5);
-    }
-    h1{margin:0 0 6px; font-size:clamp(18px,2.5vw,22px)}
-    .sub{margin:0 0 14px; font-size:14px; color:var(--muted)}
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
 
-    .screen{
-      height:160px; display:grid; place-items:center; 
-      background:#0f1430; border:1px solid #2a3358; border-radius:14px; 
-      margin:10px 0 16px; overflow:hidden; position:relative;
-    }
-    .num{
-      font-weight:800; line-height:1; letter-spacing:1px;
-      font-size: clamp(64px, 12vw, 120px);
-      text-shadow: 0 8px 24px rgba(0,0,0,.6);
-      transform: scale(0.9);
-      transition: transform .18s ease;
-    }
-    .num.bump{ transform: scale(1.06); }
+        #tombola {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
 
-    .controls{ display:flex; gap:12px; flex-wrap:wrap; }
-    button{
-      appearance:none; border:1px solid #31406e; background:#1a2142; color:var(--ink);
-      padding:12px 16px; border-radius:12px; font-weight:700; cursor:pointer;
-      transition: transform .06s ease, background .2s ease, border-color .2s ease, opacity .2s ease;
-    }
-    button:hover{ transform: translateY(-1px); background:#212a56; border-color:#43549e; }
-    button:active{ transform: translateY(0); }
-    button:disabled{ opacity:.55; cursor:not-allowed; }
+        .gif-fondo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
 
-    .grid{
-      margin-top:14px; display:grid; grid-template-columns: repeat(10, 1fr);
-      gap:8px;
-    }
-    .chip{
-      border:1px solid #2a3358; padding:10px 0; text-align:center; border-radius:10px;
-      font-weight:700; user-select:none; 
-      color:#a6abc5; background:var(--chipOff);
-      opacity:.5; transition: background .2s ease, color .2s ease, border-color .2s ease, transform .12s ease, opacity .2s ease;
-    }
-    .chip.hit{
-      color:#04280f; 
-      background: linear-gradient(180deg, var(--chipOn1), var(--chipOn2));
-      border-color:#1e8b3e; opacity:1; transform: translateY(-2px);
-      box-shadow: inset 0 6px 14px rgba(11,43,21,.8), 0 2px 10px rgba(11,43,21,.25);
-    }
+        .bola {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            font-size: 2em;
+            color: #333;
+            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transition: all 0.5s ease-in-out;
+        }
 
-    .foot{
-      margin-top:10px; font-size:12px; color:var(--muted);
-      display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap;
-    }
-    .pill{
-      border:1px dashed #31406e; padding:6px 10px; border-radius:999px;
-    }
-  </style>
+        .bola.grande {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            z-index: 10;
+        }
+
+        .bola.aparece {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #sortear {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        #sortear:hover {
+            background-color: #2980b9;
+        }
+
+        #sortear:active {
+            transform: scale(0.98);
+        }
+
+        #sortear:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        hr {
+            width: 80%;
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 20px 0;
+        }
+
+        #bolas-sorteadas {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            max-width: 90%;
+        }
+
+        #bolas-sorteadas .bola {
+            width: 45px;
+            height: 45px;
+            font-size: 1.2em;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-numeros {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .grid-numeros span {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background-color: #ddd;
+            border-radius: 50%;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .grid-numeros .sorteado {
+            background-color: #4CAF50;
+            color: white;
+            box-shadow: 0 0 5px #4CAF50;
+        }
+    </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>🎲 Tómbola 1–20</h1>
-      <p class="sub">Saca números al azar sin repetir. Abajo se marcan automáticamente.</p>
-
-      <div class="screen">
-        <div id="current" class="num">—</div>
-      </div>
-
-      <div class="controls">
-        <button id="drawBtn" type="button">Sacar número</button>
-        <button id="resetBtn" type="button" title="Limpiar todo">Reiniciar</button>
-      </div>
-
-      <div id="grid" class="grid" aria-label="Números del 1 al 20"></div>
-
-      <div class="foot">
-        <div class="pill">Restantes: <strong id="leftCount">20</strong></div>
-        <div class="pill">Sacados: <strong id="drawnCount">0</strong></div>
-      </div>
+    <h1>Tómbola 1-20</h1>
+    <div id="tombola">
+        <img src="https://i.ibb.co/6P0D6kP/tombola-bg.gif" alt="Tómbola animada" class="gif-fondo">
+        <div id="bola-seleccionada" class="bola grande" style="display:none;"></div>
     </div>
-  </div>
+    <button id="sortear">🎯 ¡SORTEAR!</button>
 
-  <script>
-    (function(){
-      // ====== Config ======
-      const MIN = 1, MAX = 20;
+    <hr>
 
-      // ====== Estado ======
-      let pool = [];
-      let drawn = new Set();
+    <h2>Números sorteados:</h2>
+    <div id="bolas-sorteadas"></div>
+    
+    <hr>
 
-      // ====== DOM ======
-      const grid = document.getElementById('grid');
-      const current = document.getElementById('current');
-      const drawBtn = document.getElementById('drawBtn');
-      const resetBtn = document.getElementById('resetBtn');
-      const leftCount = document.getElementById('leftCount');
-      const drawnCount = document.getElementById('drawnCount');
+    <h2>Lista de Comprobación:</h2>
+    <div id="lista-comprobacion" class="grid-numeros">
+        </div>
 
-      // ====== Util ======
-      function range(a,b){ const out=[]; for(let i=a;i<=b;i++) out.push(i); return out; }
-      function animateNumber(){
-        current.classList.remove('bump');
-        // Forzar reflow para reiniciar animación
-        void current.offsetWidth;
-        current.classList.add('bump');
-      }
+    <script>
+        let disponibles = Array.from({ length: 20 }, (_, i) => i + 1);
+        const bolaSeleccionada = document.getElementById("bola-seleccionada");
+        const contenedorSorteadas = document.getElementById("bolas-sorteadas");
+        const listaComprobacion = document.getElementById("lista-comprobacion");
+        const botonSortear = document.getElementById("sortear");
 
-      // ====== Grilla ======
-      function buildGrid(){
-        const frag = document.createDocumentFragment();
-        range(MIN,MAX).forEach(n=>{
-          const chip = document.createElement('div');
-          chip.className = 'chip';
-          chip.dataset.n = String(n);
-          chip.textContent = n;
-          frag.appendChild(chip);
-        });
-        grid.innerHTML = '';
-        grid.appendChild(frag);
-      }
-      function markChip(n){
-        const el = grid.querySelector('.chip[data-n="'+n+'"]');
-        if(el) el.classList.add('hit');
-      }
-      function unmarkAll(){
-        grid.querySelectorAll('.chip.hit').forEach(el => el.classList.remove('hit'));
-      }
-
-      // ====== Pool & Conteos ======
-      function refillPool(){
-        pool = range(MIN,MAX).filter(n => !drawn.has(n));
-      }
-      function setCounts(){
-        leftCount.textContent = String(pool.length);
-        drawnCount.textContent = String(drawn.size);
-      }
-
-      // ====== Acciones ======
-      function draw(){
-        if(pool.length === 0) return;
-        const i = Math.floor(Math.random() * pool.length);
-        const n = pool.splice(i,1)[0];
-        drawn.add(n);
-        current.textContent = n;
-        animateNumber();
-        markChip(n);
-        setCounts();
-        if(pool.length === 0){
-          drawBtn.disabled = true;
-          drawBtn.textContent = 'Sin números';
+        // Generar la lista de comprobación dinámicamente
+        for (let i = 1; i <= 20; i++) {
+            const numeroSpan = document.createElement("span");
+            numeroSpan.id = `check-${i}`;
+            numeroSpan.textContent = i;
+            listaComprobacion.appendChild(numeroSpan);
         }
-      }
-      function reset(){
-        drawn.clear();
-        refillPool();
-        current.textContent = '—';
-        unmarkAll();
-        drawBtn.disabled = false;
-        drawBtn.textContent = 'Sacar número';
-        setCounts();
-      }
 
-      // ====== Init ======
-      buildGrid();
-      reset();
+        function sortearNumero() {
+            if (!disponibles.length) {
+                bolaSeleccionada.textContent = "¡Fin!";
+                bolaSeleccionada.style.display = "flex";
+                botonSortear.disabled = true;
+                return;
+            }
 
-      // ====== Eventos ======
-      drawBtn.addEventListener('click', draw);
-      resetBtn.addEventListener('click', reset);
-      document.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter') draw();
-        if(e.key.toLowerCase && e.key.toLowerCase() === 'r') reset();
-      });
-    })();
-  </script>
+            const index = Math.floor(Math.random() * disponibles.length);
+            const numero = disponibles.splice(index, 1)[0];
+
+            bolaSeleccionada.textContent = numero;
+            bolaSeleccionada.style.display = "flex";
+
+            setTimeout(() => {
+                bolaSeleccionada.style.display = "none";
+
+                const bolaFinal = document.createElement("div");
+                bolaFinal.className = "bola";
+                bolaFinal.textContent = numero;
+                bolaFinal.classList.add('aparece');
+                contenedorSorteadas.appendChild(bolaFinal);
+                
+                // Marcar el número en la lista de comprobación
+                document.getElementById(`check-${numero}`).classList.add('sorteado');
+            }, 1500);
+        }
+
+        document.getElementById("sortear").addEventListener("click", sortearNumero);
+    </script>
 </body>
 </html>
