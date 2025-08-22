@@ -1,7 +1,3 @@
-Aquí tienes una **tómbola virtual** que genera números aleatorios del **1 al 20** y muestra una **lista de comprobación** en la parte inferior.
-Cada número sorteado se marcará automáticamente en la lista para que sea fácil llevar el control.
-
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -118,14 +114,3 @@ Cada número sorteado se marcará automáticamente en la lista para que sea fác
   </script>
 </body>
 </html>
-```
-
-### **Características:**
-
-* 🎲 **Genera números aleatorios del 1 al 20**.
-* ✅ Los números **no se repiten**.
-* 🟢 Cada número sorteado se **marca visualmente** en la lista.
-* 📋 Lista organizada en **10 columnas**, clara y fácil de leer.
-
-Si quieres, puedo hacer que la tómbola tenga **una animación giratoria** antes de mostrar el número sorteado, para darle un efecto más vistoso.
-¿Te interesa que le agregue eso?
