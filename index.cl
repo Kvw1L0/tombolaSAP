@@ -5,51 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tómbola 1–20</title>
   <style>
+    /* ====== Estilos básicos y robustos ====== */
     :root{
-      --bg:#0f1220; --card:#171a2b; --ink:#e8ecff;
-      --accent:#7ea8ff; --muted:#61688a; --hit:#a3ffa3;
+      --bg:#0e1220; 
+      --card:#171b2e; 
+      --ink:#eef1ff; 
+      --muted:#8b90a8;
+      --accent:#7ea8ff;
+      --chipOff:#141a33;
+      --chipOn1:#aaffbf; 
+      --chipOn2:#66ffa6;
     }
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
-      margin:0; min-height:100svh; display:grid; place-items:center;
-      background: radial-gradient(1200px 800px at 70% -10%, #182040 0%, #0f1220 55%, #0b0e18 100%);
-      color:var(--ink); font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      margin:0; display:grid; place-items:center; min-height:100vh;
+      background:#0b0f1e;
+      color:var(--ink); font-family:system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
     }
-    .wrap{
-      width:min(720px,92vw); padding:20px;
-    }
+    .wrap{ width:min(720px,94vw); padding:20px; }
+
     .card{
-      background: color-mix(in oklab, var(--card), black 5%);
-      border:1px solid color-mix(in oklab, var(--accent), black 70%);
-      border-radius:18px; padding:20px; box-shadow: 0 10px 30px #0008;
+      background:#151a2c; border:1px solid #2c3561; border-radius:18px; 
+      padding:20px; box-shadow:0 10px 30px rgba(0,0,0,.5);
     }
-    h1{margin:0 0 8px; font-size:clamp(18px,2.4vw,22px); font-weight:700; letter-spacing:.3px}
-    .sub{color:var(--muted); font-size:14px; margin-bottom:14px}
+    h1{margin:0 0 6px; font-size:clamp(18px,2.5vw,22px)}
+    .sub{margin:0 0 14px; font-size:14px; color:var(--muted)}
 
     .screen{
-      display:grid; place-items:center; height:160px;
-      background:linear-gradient(180deg, #12162a, #0f1427);
-      border:1px solid #2a3358; border-radius:16px; margin:10px 0 16px;
-      position:relative; overflow:hidden;
+      height:160px; display:grid; place-items:center; 
+      background:#0f1430; border:1px solid #2a3358; border-radius:14px; 
+      margin:10px 0 16px; overflow:hidden; position:relative;
     }
     .num{
       font-weight:800; line-height:1; letter-spacing:1px;
       font-size: clamp(64px, 12vw, 120px);
-      text-shadow: 0 8px 24px #000a;
+      text-shadow: 0 8px 24px rgba(0,0,0,.6);
       transform: scale(0.9);
       transition: transform .18s ease;
     }
-    .num.bump{ transform: scale(1.05); }
+    .num.bump{ transform: scale(1.06); }
 
     .controls{ display:flex; gap:12px; flex-wrap:wrap; }
     button{
-      appearance:none; border:1px solid #2e3a66; background:#1a2142; color:var(--ink);
+      appearance:none; border:1px solid #31406e; background:#1a2142; color:var(--ink);
       padding:12px 16px; border-radius:12px; font-weight:700; cursor:pointer;
       transition: transform .06s ease, background .2s ease, border-color .2s ease, opacity .2s ease;
     }
-    button:hover{ transform: translateY(-1px); background:#202a56; border-color:#44539a; }
+    button:hover{ transform: translateY(-1px); background:#212a56; border-color:#43549e; }
     button:active{ transform: translateY(0); }
-    button:disabled{ opacity:.5; cursor:not-allowed; }
+    button:disabled{ opacity:.55; cursor:not-allowed; }
 
     .grid{
       margin-top:14px; display:grid; grid-template-columns: repeat(10, 1fr);
@@ -57,15 +62,15 @@
     }
     .chip{
       border:1px solid #2a3358; padding:10px 0; text-align:center; border-radius:10px;
-      font-weight:700; user-select:none; transition: background .2s ease, color .2s ease, border-color .2s ease, transform .12s ease;
-      color: color-mix(in oklab, var(--ink), #000 40%);
-      background: #131833;
-      opacity:.5;
+      font-weight:700; user-select:none; 
+      color:#a6abc5; background:var(--chipOff);
+      opacity:.5; transition: background .2s ease, color .2s ease, border-color .2s ease, transform .12s ease, opacity .2s ease;
     }
     .chip.hit{
-      color:#041607; background:linear-gradient(180deg, #aaffbf, #66ffa6);
-      border-color:#1f8a3c; opacity:1; transform: translateY(-2px);
-      box-shadow: 0 6px 16px #0b2b15cc inset, 0 2px 12px #0b2b1533;
+      color:#04280f; 
+      background: linear-gradient(180deg, var(--chipOn1), var(--chipOn2));
+      border-color:#1e8b3e; opacity:1; transform: translateY(-2px);
+      box-shadow: inset 0 6px 14px rgba(11,43,21,.8), 0 2px 10px rgba(11,43,21,.25);
     }
 
     .foot{
@@ -73,7 +78,7 @@
       display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap;
     }
     .pill{
-      border:1px dashed #2e3a66; padding:6px 10px; border-radius:999px;
+      border:1px dashed #31406e; padding:6px 10px; border-radius:999px;
     }
   </style>
 </head>
@@ -81,15 +86,15 @@
   <div class="wrap">
     <div class="card">
       <h1>🎲 Tómbola 1–20</h1>
-      <div class="sub">Saca números al azar sin repetir. Abajo se marcan automáticamente.</div>
+      <p class="sub">Saca números al azar sin repetir. Abajo se marcan automáticamente.</p>
 
       <div class="screen">
         <div id="current" class="num">—</div>
       </div>
 
       <div class="controls">
-        <button id="drawBtn">Sacar número</button>
-        <button id="resetBtn" title="Limpiar todo">Reiniciar</button>
+        <button id="drawBtn" type="button">Sacar número</button>
+        <button id="resetBtn" type="button" title="Limpiar todo">Reiniciar</button>
       </div>
 
       <div id="grid" class="grid" aria-label="Números del 1 al 20"></div>
@@ -102,96 +107,98 @@
   </div>
 
   <script>
-    // --- Estado ---
-    const MIN = 1, MAX = 20;
-    let pool = [];
-    let drawn = new Set();
+    (function(){
+      // ====== Config ======
+      const MIN = 1, MAX = 20;
 
-    // --- DOM ---
-    const grid = document.getElementById('grid');
-    const current = document.getElementById('current');
-    const drawBtn = document.getElementById('drawBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const leftCount = document.getElementById('leftCount');
-    const drawnCount = document.getElementById('drawnCount');
+      // ====== Estado ======
+      let pool = [];
+      let drawn = new Set();
 
-    // Construye la grilla 1..20
-    function buildGrid(){
-      grid.innerHTML = '';
-      for(let n = MIN; n <= MAX; n++){
-        const chip = document.createElement('div');
-        chip.className = 'chip';
-        chip.dataset.n = n;
-        chip.textContent = n;
-        grid.appendChild(chip);
+      // ====== DOM ======
+      const grid = document.getElementById('grid');
+      const current = document.getElementById('current');
+      const drawBtn = document.getElementById('drawBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const leftCount = document.getElementById('leftCount');
+      const drawnCount = document.getElementById('drawnCount');
+
+      // ====== Util ======
+      function range(a,b){ const out=[]; for(let i=a;i<=b;i++) out.push(i); return out; }
+      function animateNumber(){
+        current.classList.remove('bump');
+        // Forzar reflow para reiniciar animación
+        void current.offsetWidth;
+        current.classList.add('bump');
       }
-    }
 
-    function setCounts(){
-      leftCount.textContent = pool.length;
-      drawnCount.textContent = drawn.size;
-    }
-
-    function refillPool(){
-      pool = [];
-      for(let n = MIN; n <= MAX; n++){
-        if(!drawn.has(n)) pool.push(n);
+      // ====== Grilla ======
+      function buildGrid(){
+        const frag = document.createDocumentFragment();
+        range(MIN,MAX).forEach(n=>{
+          const chip = document.createElement('div');
+          chip.className = 'chip';
+          chip.dataset.n = String(n);
+          chip.textContent = n;
+          frag.appendChild(chip);
+        });
+        grid.innerHTML = '';
+        grid.appendChild(frag);
       }
-    }
-
-    function markChip(n){
-      const el = grid.querySelector(`.chip[data-n="${n}"]`);
-      if(el){ el.classList.add('hit'); }
-    }
-
-    function unmarkAll(){
-      grid.querySelectorAll('.chip').forEach(el => el.classList.remove('hit'));
-    }
-
-    function animateNumber(){
-      current.classList.remove('bump');
-      void current.offsetWidth; // reflow para reiniciar animación
-      current.classList.add('bump');
-    }
-
-    function draw(){
-      if(pool.length === 0) return;
-      const i = Math.floor(Math.random() * pool.length);
-      const n = pool.splice(i,1)[0]; // quita del pool
-      drawn.add(n);
-      current.textContent = n;
-      animateNumber();
-      markChip(n);
-      setCounts();
-      if(pool.length === 0){
-        drawBtn.disabled = true;
-        drawBtn.textContent = 'Sin números';
+      function markChip(n){
+        const el = grid.querySelector('.chip[data-n="'+n+'"]');
+        if(el) el.classList.add('hit');
       }
-    }
+      function unmarkAll(){
+        grid.querySelectorAll('.chip.hit').forEach(el => el.classList.remove('hit'));
+      }
 
-    function reset(all=true){
-      drawn.clear();
-      refillPool();
-      current.textContent = '—';
-      unmarkAll();
-      drawBtn.disabled = false;
-      drawBtn.textContent = 'Sacar número';
-      setCounts();
-    }
+      // ====== Pool & Conteos ======
+      function refillPool(){
+        pool = range(MIN,MAX).filter(n => !drawn.has(n));
+      }
+      function setCounts(){
+        leftCount.textContent = String(pool.length);
+        drawnCount.textContent = String(drawn.size);
+      }
 
-    // Inicializa
-    buildGrid();
-    reset();
+      // ====== Acciones ======
+      function draw(){
+        if(pool.length === 0) return;
+        const i = Math.floor(Math.random() * pool.length);
+        const n = pool.splice(i,1)[0];
+        drawn.add(n);
+        current.textContent = n;
+        animateNumber();
+        markChip(n);
+        setCounts();
+        if(pool.length === 0){
+          drawBtn.disabled = true;
+          drawBtn.textContent = 'Sin números';
+        }
+      }
+      function reset(){
+        drawn.clear();
+        refillPool();
+        current.textContent = '—';
+        unmarkAll();
+        drawBtn.disabled = false;
+        drawBtn.textContent = 'Sacar número';
+        setCounts();
+      }
 
-    // Eventos
-    drawBtn.addEventListener('click', draw);
-    resetBtn.addEventListener('click', () => reset(true));
+      // ====== Init ======
+      buildGrid();
+      reset();
 
-    // Accesos rápidos con teclado (Enter saca número)
-    document.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter'){ draw(); }
-      if(e.key.toLowerCase() === 'r'){ reset(); }
-    });
+      // ====== Eventos ======
+      drawBtn.addEventListener('click', draw);
+      resetBtn.addEventListener('click', reset);
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter') draw();
+        if(e.key.toLowerCase && e.key.toLowerCase() === 'r') reset();
+      });
+    })();
   </script>
 </body>
 </html>
