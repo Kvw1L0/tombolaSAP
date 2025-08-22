@@ -15,7 +15,6 @@
             --sap-text-color: #333;
             --sap-success-color: #2e8b57;
             --sap-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            --sap-shadow-hover: 0 6px 12px rgba(0,0,0,0.15);
         }
 
         body {
@@ -86,7 +85,6 @@
             font-weight: 700;
             color: var(--sap-blue-primary);
             margin: 0;
-            transition: all 0.5s ease-in-out;
         }
 
         .sap-button {
@@ -100,15 +98,16 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
+            transition: background-color 0.3s;
         }
 
         .sap-button:hover {
             background-color: var(--sap-blue-secondary);
         }
 
-        .sap-button:active {
-            transform: translateY(2px);
+        .sap-button:disabled {
+            background-color: var(--sap-gray-dark);
+            cursor: not-allowed;
         }
 
         .divider {
@@ -136,17 +135,15 @@
             border-radius: 4px;
             padding: 10px;
             font-weight: 700;
-            opacity: 0.5; /* Números atenuados por defecto */
-            transition: opacity 0.3s, transform 0.3s, background-color 0.3s;
+            opacity: 0.5;
+            transition: opacity 0.3s, background-color 0.3s, transform 0.3s;
         }
 
         .numero-item.sorteado {
             background-color: var(--sap-success-color);
             color: #fff;
-            opacity: 1; /* El número sorteado ya no está atenuado */
-            font-size: 1.1rem;
+            opacity: 1;
             transform: scale(1.1);
-            box-shadow: var(--sap-shadow);
         }
     </style>
 </head>
@@ -180,10 +177,10 @@
             const sortearBtn = document.getElementById('sortear-btn');
             const listaNumerosContainer = document.getElementById('lista-numeros');
 
-            // Inicializar los números disponibles del 1 al 20
-            let numerosDisponibles = Array.from({ length: 20 }, (_, i) => i + 1);
-            
-            // Función para generar los elementos de los números en el HTML
+            // Inicializar un array con los números del 1 al 20
+            let numerosDisponibles = Array.from({length: 20}, (_, i) => i + 1);
+
+            // Genera la cuadrícula de números del 1 al 20
             const generarListaNumeros = () => {
                 for (let i = 1; i <= 20; i++) {
                     const numeroItem = document.createElement('div');
@@ -194,37 +191,34 @@
                 }
             };
 
-            // Función principal para sortear un número
+            // Lógica principal para sortear un número
             const sortearNumero = () => {
-                // Verificar si aún quedan números para sortear
+                // Si no quedan números, muestra un mensaje y desactiva el botón
                 if (numerosDisponibles.length === 0) {
                     alert('¡Todos los números han sido sorteados!');
                     sortearBtn.disabled = true;
                     return;
                 }
 
-                // Seleccionar un índice aleatorio
+                // Elige un número aleatorio de la lista de disponibles
                 const indiceAleatorio = Math.floor(Math.random() * numerosDisponibles.length);
-                // Obtener el número sorteado
                 const numeroSorteado = numerosDisponibles[indiceAleatorio];
 
-                // Mostrar el número en la pantalla
+                // Muestra el número sorteado en el área principal
                 numeroSorteadoDisplay.textContent = numeroSorteado < 10 ? `0${numeroSorteado}` : numeroSorteado;
 
-                // Marcar el número como sorteado en la lista
+                // Encuentra el número en la cuadrícula y le añade la clase 'sorteado'
                 const numeroElemento = document.querySelector(`.numero-item[data-numero="${numeroSorteado}"]`);
                 if (numeroElemento) {
                     numeroElemento.classList.add('sorteado');
                 }
 
-                // Eliminar el número sorteado de la lista de disponibles
+                // Elimina el número sorteado de la lista de disponibles
                 numerosDisponibles.splice(indiceAleatorio, 1);
             };
 
-            // Generar la lista de números al cargar la página
+            // Inicializa la aplicación al cargar la página
             generarListaNumeros();
-
-            // Asignar el evento al botón
             sortearBtn.addEventListener('click', sortearNumero);
         });
     </script>
