@@ -1,221 +1,131 @@
+Aquí tienes una **tómbola virtual** que genera números aleatorios del **1 al 20** y muestra una **lista de comprobación** en la parte inferior.
+Cada número sorteado se marcará automáticamente en la lista para que sea fácil llevar el control.
+
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Tómbola 1-20</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f2f5;
-            color: #333;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tómbola Virtual</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
 
-        h1, h2 {
-            color: #2c3e50;
-            text-align: center;
-        }
+    h1 {
+      color: #222;
+      margin-bottom: 20px;
+    }
 
-        #tombola {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
+    #numero-sorteado {
+      font-size: 5rem;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #0077ff;
+    }
 
-        .gif-fondo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
+    button {
+      background-color: #0077ff;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-bottom: 30px;
+    }
 
-        .bola {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: white;
-            border-radius: 50%;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            font-weight: bold;
-            font-size: 2em;
-            color: #333;
-            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            transition: all 0.5s ease-in-out;
-        }
+    button:hover {
+      background-color: #005cd6;
+    }
 
-        .bola.grande {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            z-index: 10;
-        }
+    #lista-numeros {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 10px;
+      max-width: 500px;
+    }
 
-        .bola.aparece {
-            animation: fadeIn 0.5s ease-out;
-        }
+    .numero {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      color: #666;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
 
-        @keyframes bounceIn {
-            0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
-            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        #sortear {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 1.2em;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-
-        #sortear:hover {
-            background-color: #2980b9;
-        }
-
-        #sortear:active {
-            transform: scale(0.98);
-        }
-
-        #sortear:disabled {
-            background-color: #bdc3c7;
-            cursor: not-allowed;
-        }
-
-        hr {
-            width: 80%;
-            border: 0;
-            border-top: 1px solid #ccc;
-            margin: 20px 0;
-        }
-
-        #bolas-sorteadas {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-            max-width: 90%;
-        }
-
-        #bolas-sorteadas .bola {
-            width: 45px;
-            height: 45px;
-            font-size: 1.2em;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .grid-numeros {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .grid-numeros span {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 40px;
-            height: 40px;
-            background-color: #ddd;
-            border-radius: 50%;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #333;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .grid-numeros .sorteado {
-            background-color: #4CAF50;
-            color: white;
-            box-shadow: 0 0 5px #4CAF50;
-        }
-    </style>
+    .marcado {
+      background-color: #0077ff;
+      color: white;
+      transform: scale(1.1);
+    }
+  </style>
 </head>
 <body>
-    <h1>Tómbola 1-20</h1>
-    <div id="tombola">
-        <img src="https://i.ibb.co/6P0D6kP/tombola-bg.gif" alt="Tómbola animada" class="gif-fondo">
-        <div id="bola-seleccionada" class="bola grande" style="display:none;"></div>
-    </div>
-    <button id="sortear">🎯 ¡SORTEAR!</button>
+  <h1>Tómbola Virtual</h1>
+  <div id="numero-sorteado">--</div>
+  <button id="sortear">🎲 Sortear número</button>
 
-    <hr>
+  <div id="lista-numeros"></div>
 
-    <h2>Números sorteados:</h2>
-    <div id="bolas-sorteadas"></div>
-    
-    <hr>
+  <script>
+    const boton = document.getElementById("sortear");
+    const numeroSorteado = document.getElementById("numero-sorteado");
+    const listaNumeros = document.getElementById("lista-numeros");
 
-    <h2>Lista de Comprobación:</h2>
-    <div id="lista-comprobacion" class="grid-numeros">
-        </div>
+    let numerosDisponibles = Array.from({ length: 20 }, (_, i) => i + 1);
 
-    <script>
-        let disponibles = Array.from({ length: 20 }, (_, i) => i + 1);
-        const bolaSeleccionada = document.getElementById("bola-seleccionada");
-        const contenedorSorteadas = document.getElementById("bolas-sorteadas");
-        const listaComprobacion = document.getElementById("lista-comprobacion");
-        const botonSortear = document.getElementById("sortear");
+    // Crear la lista de números al inicio
+    numerosDisponibles.forEach(num => {
+      const div = document.createElement("div");
+      div.classList.add("numero");
+      div.id = `num-${num}`;
+      div.textContent = num;
+      listaNumeros.appendChild(div);
+    });
 
-        // Generar la lista de comprobación dinámicamente
-        for (let i = 1; i <= 20; i++) {
-            const numeroSpan = document.createElement("span");
-            numeroSpan.id = `check-${i}`;
-            numeroSpan.textContent = i;
-            listaComprobacion.appendChild(numeroSpan);
-        }
+    boton.addEventListener("click", () => {
+      if (numerosDisponibles.length === 0) {
+        alert("¡Ya no hay más números disponibles!");
+        return;
+      }
 
-        function sortearNumero() {
-            if (!disponibles.length) {
-                bolaSeleccionada.textContent = "¡Fin!";
-                bolaSeleccionada.style.display = "flex";
-                botonSortear.disabled = true;
-                return;
-            }
+      // Obtener índice aleatorio y número correspondiente
+      const indice = Math.floor(Math.random() * numerosDisponibles.length);
+      const numero = numerosDisponibles.splice(indice, 1)[0];
 
-            const index = Math.floor(Math.random() * disponibles.length);
-            const numero = disponibles.splice(index, 1)[0];
+      // Mostrar el número sorteado
+      numeroSorteado.textContent = numero;
 
-            bolaSeleccionada.textContent = numero;
-            bolaSeleccionada.style.display = "flex";
-
-            setTimeout(() => {
-                bolaSeleccionada.style.display = "none";
-
-                const bolaFinal = document.createElement("div");
-                bolaFinal.className = "bola";
-                bolaFinal.textContent = numero;
-                bolaFinal.classList.add('aparece');
-                contenedorSorteadas.appendChild(bolaFinal);
-                
-                // Marcar el número en la lista de comprobación
-                document.getElementById(`check-${numero}`).classList.add('sorteado');
-            }, 1500);
-        }
-
-        document.getElementById("sortear").addEventListener("click", sortearNumero);
-    </script>
+      // Marcarlo en la lista de comprobación
+      const elemento = document.getElementById(`num-${numero}`);
+      elemento.classList.add("marcado");
+    });
+  </script>
 </body>
 </html>
+```
+
+### **Características:**
+
+* 🎲 **Genera números aleatorios del 1 al 20**.
+* ✅ Los números **no se repiten**.
+* 🟢 Cada número sorteado se **marca visualmente** en la lista.
+* 📋 Lista organizada en **10 columnas**, clara y fácil de leer.
+
+Si quieres, puedo hacer que la tómbola tenga **una animación giratoria** antes de mostrar el número sorteado, para darle un efecto más vistoso.
+¿Te interesa que le agregue eso?
